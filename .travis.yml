@@ -1,11 +1,21 @@
 language: python
 sudo: required
+env:
+  - WHAT=webpage
+  - WHAT=test PROG=sed
+  - WHAT=test PROG=vim
 python:
   - "2.7"
-install:
-  - sudo apt-get update
-  - sudo apt-get install oracle-java8-installer
-  - sudo update-java-alternatives -s java-8-oracle
-  - pip install html5validator
-script:
-  - html5validator --show-warnings
+install: |
+  if [ $WHAT = webpage ]; then
+    sudo apt-get update
+    sudo apt-get install oracle-java8-installer
+    sudo update-java-alternatives -s java-8-oracle
+    pip install html5validator
+  fi
+script: |
+  if [ $WHAT = webpage ]; then
+    html5validator --show-warnings
+  else
+    tests/test_$PROG.sh
+  fi
